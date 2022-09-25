@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1664130871987" clover="3.2.0">
-  <project timestamp="1664130871987" name="All files">
-    <metrics statements="54" coveredstatements="20" conditionals="27" coveredconditionals="9" methods="23" coveredmethods="7" elements="104" coveredelements="36" complexity="0" loc="54" ncloc="54" packages="4" files="4" classes="4"/>
+<coverage generated="1664148135428" clover="3.2.0">
+  <project timestamp="1664148135428" name="All files">
+    <metrics statements="54" coveredstatements="21" conditionals="27" coveredconditionals="9" methods="23" coveredmethods="8" elements="104" coveredelements="38" complexity="0" loc="54" ncloc="54" packages="4" files="4" classes="4"/>
     <package name="src">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="database.ts" path="/home/fernando/driven/projetos/sing-me-a-song-main/back-end/src/database.ts">
@@ -29,9 +29,9 @@
       </file>
     </package>
     <package name="src.services">
-      <metrics statements="30" coveredstatements="15" conditionals="6" coveredconditionals="3" methods="9" coveredmethods="5"/>
+      <metrics statements="30" coveredstatements="16" conditionals="6" coveredconditionals="3" methods="9" coveredmethods="6"/>
       <file name="recommendationsService.ts" path="/home/fernando/driven/projetos/sing-me-a-song-main/back-end/src/services/recommendationsService.ts">
-        <metrics statements="30" coveredstatements="15" conditionals="6" coveredconditionals="3" methods="9" coveredmethods="5"/>
+        <metrics statements="30" coveredstatements="16" conditionals="6" coveredconditionals="3" methods="9" coveredmethods="6"/>
         <line num="8" count="2" type="stmt"/>
         <line num="11" count="2" type="cond" truecount="1" falsecount="0"/>
         <line num="12" count="1" type="stmt"/>
@@ -46,7 +46,7 @@
         <line num="38" count="7" type="cond" truecount="1" falsecount="0"/>
         <line num="40" count="4" type="stmt"/>
         <line num="44" count="1" type="stmt"/>
-        <line num="48" count="0" type="stmt"/>
+        <line num="48" count="1" type="stmt"/>
         <line num="52" count="0" type="stmt"/>
         <line num="53" count="0" type="stmt"/>
         <line num="55" count="0" type="stmt"/>

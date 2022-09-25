@@ -1,9 +1,11 @@
-import { recommendationRepository } from "./../../src/repositories/recommendationRepository";
-import { Recommendation } from "@prisma/client";
-import { CreateRecommendationData } from "./../../src/services/recommendationsService";
 import { jest } from "@jest/globals";
 import { faker } from "@faker-js/faker";
-import { recommendationService } from "../../src/services/recommendationsService";
+import { Recommendation } from "@prisma/client";
+import { recommendationRepository } from "./../../src/repositories/recommendationRepository";
+import {
+  CreateRecommendationData,
+  recommendationService,
+} from "./../../src/services/recommendationsService";
 
 jest.mock("../../src/repositories/recommendationRepository");
 
@@ -100,6 +102,29 @@ describe("Test suite get recommendations", () => {
 
     const response = recommendationService.getById(recommendation.id);
     expect(response).rejects.toEqual({ type: "not_found", message: "" });
+  });
+});
+
+describe("Test suite get recommendations top amount", () => {
+  it("Should return recommendations top amount", async () => {
+    const recommendation: Recommendation[] = [
+      {
+        id: 1,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: 3,
+      },
+    ];
+
+    jest
+      .spyOn(recommendationRepository, "getAmountByScore")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    const response = await recommendationService.getTop(10);
+
+    expect(response).toEqual(recommendation);
   });
 });
 
