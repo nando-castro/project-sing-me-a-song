@@ -141,4 +141,43 @@ describe("Test suite votes recommendations", () => {
     expect(response).rejects.toEqual({ type: "not_found", message: "" });
     expect(recommendationRepository.updateScore).not.toBeCalled();
   });
+  it("Should downvote recommendation sucess ", async () => {
+    const recommendation: Recommendation = {
+      id: 1,
+      name: faker.lorem.words(2),
+      youtubeLink: "https://youtu.be/7DRFjThtC14",
+      score: 3,
+    };
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    await recommendationService.downvote(recommendation.id);
+
+    expect(recommendationRepository.updateScore).toBeCalled();
+  });
+  it("Should downvote recommendation error not_found ", async () => {
+    const recommendation: Recommendation = {
+      id: 1,
+      name: faker.lorem.words(2),
+      youtubeLink: "https://youtu.be/7DRFjThtC14",
+      score: 4,
+    };
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {});
+
+    const response = recommendationService.downvote(recommendation.id);
+
+    expect(response).rejects.toEqual({ type: "not_found", message: "" });
+    expect(recommendationRepository.updateScore).not.toBeCalled();
+  });
 });
