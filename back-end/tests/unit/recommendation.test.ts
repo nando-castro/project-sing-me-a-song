@@ -87,7 +87,7 @@ describe("Test suite get recommendations", () => {
     const response = await recommendationService.getById(recommendation.id);
     expect(response).toEqual(recommendation);
   });
-  it("Should get recommendations by id sucess", async () => {
+  it("Should get recommendations by id error not_found", async () => {
     const recommendation: Recommendation = {
       id: 1,
       name: faker.lorem.words(2),
@@ -100,5 +100,45 @@ describe("Test suite get recommendations", () => {
 
     const response = recommendationService.getById(recommendation.id);
     expect(response).rejects.toEqual({ type: "not_found", message: "" });
+  });
+});
+
+describe("Test suite votes recommendations", () => {
+  it("Should upvote recommendation sucess ", async () => {
+    const recommendation: Recommendation = {
+      id: 1,
+      name: faker.lorem.words(2),
+      youtubeLink: "https://youtu.be/7DRFjThtC14",
+      score: 1,
+    };
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    jest
+      .spyOn(recommendationRepository, "updateScore")
+      .mockImplementationOnce((): any => {});
+
+    await recommendationService.upvote(recommendation.id);
+
+    expect(recommendationRepository.updateScore).toBeCalled();
+  });
+  it("Should upvote recommendation error not_found ", async () => {
+    const recommendation: Recommendation = {
+      id: 1,
+      name: faker.lorem.words(2),
+      youtubeLink: "https://youtu.be/7DRFjThtC14",
+      score: 1,
+    };
+    jest
+      .spyOn(recommendationRepository, "find")
+      .mockImplementationOnce((): any => {});
+
+    const response = recommendationService.upvote(recommendation.id);
+
+    expect(response).rejects.toEqual({ type: "not_found", message: "" });
+    expect(recommendationRepository.updateScore).not.toBeCalled();
   });
 });
