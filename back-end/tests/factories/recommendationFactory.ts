@@ -31,10 +31,29 @@ async function insertVote(id: number, score: number) {
   return rows;
 }
 
+async function insertRecommendations(qte: number, score: number) {
+  const recommendations = [];
+  for (let i = 0; i < qte; i++) {
+    const recommendation = {
+      name: faker.lorem.words(2) + i,
+      youtubeLink: "https://youtu.be/7DRFjThtC14",
+      score: i,
+    };
+    const insertedRecommendation = await prisma.recommendation.create({
+      data: {
+        ...recommendation,
+      },
+    });
+    recommendations.push(insertedRecommendation);
+  }
+  return recommendations;
+}
+
 const recommendationFactory = {
+  insertVote,
   createRecommendation,
   insertRecommendation,
-  insertVote,
+  insertRecommendations,
 };
 
 export default recommendationFactory;
