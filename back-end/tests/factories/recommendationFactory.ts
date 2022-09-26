@@ -19,9 +19,22 @@ async function insertRecommendation(recommendation: CreateRecommendationData) {
   return response;
 }
 
+async function insertVote(id: number, score: number) {
+  const rows = await prisma.recommendation.update({
+    where: {
+      id,
+    },
+    data: {
+      score,
+    },
+  });
+  return rows;
+}
+
 const recommendationFactory = {
   createRecommendation,
   insertRecommendation,
+  insertVote,
 };
 
 export default recommendationFactory;

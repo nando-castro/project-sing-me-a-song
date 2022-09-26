@@ -1,3 +1,4 @@
+import { recommendationRepository } from "./../../src/repositories/recommendationRepository";
 import supertest from "supertest";
 import app from "../../src/app";
 import { prisma } from "../../src/database";
@@ -43,5 +44,68 @@ describe("Test POST/recommendation", () => {
     });
     expect(result.status).toBe(409);
     expect(recommendationCreated).not.toBeNull();
+  });
+});
+
+describe("Test upvote and downvote in POST/recommendation/upvote", () => {
+  it("Should add vote in recommendation and return status code 200", async () => {
+    await supertest(app).post("/recommendations").send(recommendationData);
+
+    const recommendationCreated = await prisma.recommendation.findUnique({
+      where: {
+        name: recommendationData.name,
+      },
+    });
+
+    const result = await supertest(app).post(
+      `recommendations/${recommendationCreated.id}/upvote`
+    );
+    await recommendationFactory.insertVote(recommendationCreated.id, 1);
+    const recommendationUpvote = await recommendationRepository.find(
+      recommendationCreated.id
+    );
+    // expect(result.status).toBe(200);
+    expect(recommendationUpvote.score).toBe(1);
+  });
+  it("Should not exists recommendation and return status code 404", async () => {
+    const result = await supertest(app).post(`recommendations/${1}/upvote`);
+    // const recommendationUpvote = await recommendationRepository.find(1);
+    expect(result.status).toBe(404);
+  });
+  it("Should remove vote in recommendation and return status code 200", async () => {
+    await supertest(app).post("/recommendations").send(recommendationData);
+
+    const recommendationCreated = await prisma.recommendation.findUnique({
+      where: {
+        name: recommendationData.name,
+      },
+    });
+
+    await supertest(app).post(
+      `recommendations/${recommendationCreated.id}/downvote`
+    );
+    await recommendationFactory.insertVote(recommendationCreated.id, -1);
+    const recommendationUpvote = await recommendationRepository.find(
+      recommendationCreated.id
+    );
+    expect(recommendationUpvote.score).toBe(-1);
+  });
+  it("Should remove recommendation if score is less -5", async () => {
+    await supertest(app).post("/recommendations").send(recommendationData);
+
+    const recommendationCreated = await prisma.recommendation.findUnique({
+      where: {
+        name: recommendationData.name,
+      },
+    });
+    await recommendationFactory.insertVote(recommendationCreated.id, -5);
+
+    await supertest(app).post(
+      `recommendations/${recommendationCreated.id}/downvote`
+    );
+    const recommendationUpvote = await recommendationRepository.find(
+      recommendationCreated.id
+    );
+    expect(recommendationUpvote).toBeNull();
   });
 });
