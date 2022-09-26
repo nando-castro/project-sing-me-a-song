@@ -105,29 +105,6 @@ describe("Test suite get recommendations", () => {
   });
 });
 
-describe("Test suite get recommendations top amount", () => {
-  it("Should return recommendations top amount", async () => {
-    const recommendation: Recommendation[] = [
-      {
-        id: 1,
-        name: faker.lorem.words(2),
-        youtubeLink: "https://youtu.be/7DRFjThtC14",
-        score: 3,
-      },
-    ];
-
-    jest
-      .spyOn(recommendationRepository, "getAmountByScore")
-      .mockImplementationOnce((): any => {
-        return recommendation;
-      });
-
-    const response = await recommendationService.getTop(10);
-
-    expect(response).toEqual(recommendation);
-  });
-});
-
 describe("Test suite votes recommendations", () => {
   it("Should upvote recommendation sucess ", async () => {
     const recommendation: Recommendation = {
@@ -237,5 +214,126 @@ describe("Test suite votes recommendations", () => {
 
     expect(recommendationRepository.updateScore).toBeCalled();
     expect(recommendationRepository.remove).toBeCalled();
+  });
+});
+
+describe("Test suite get recommendations top amount", () => {
+  it("Should return recommendations top amount", async () => {
+    const recommendation: Recommendation[] = [
+      {
+        id: 1,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: 3,
+      },
+    ];
+
+    jest
+      .spyOn(recommendationRepository, "getAmountByScore")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    const response = await recommendationService.getTop(10);
+
+    expect(response).toEqual(recommendation);
+  });
+});
+
+describe("Test suite get random recommendation", () => {
+  it("Should get recommendations random < 0.7", async () => {
+    const numberFloat = faker.datatype.float({
+      min: 0,
+      max: 0.6,
+      precision: 0.1,
+    });
+
+    const recommendation: Recommendation[] = [
+      {
+        id: 1,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: 11, max: 50 }),
+      },
+      {
+        id: 2,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: 11, max: 50 }),
+      },
+      {
+        id: 3,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: 11, max: 50 }),
+      },
+    ];
+    const random = jest
+      .spyOn(Math, "random")
+      .mockImplementationOnce((): any => {
+        return numberFloat;
+      });
+
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    const response = await recommendationService.getRandom();
+
+    expect(response.id).toBeDefined();
+    expect(response.name).toBeDefined();
+    expect(response.youtubeLink).toBeDefined();
+    expect(response.score).toBeDefined();
+    expect(random).toBeCalled();
+  });
+  it("Should get recommendations random >= 0.7", async () => {
+    const numberFloat = faker.datatype.float({
+      min: 0.7,
+      max: 1,
+      precision: 0.1,
+    });
+
+    const random = jest
+      .spyOn(Math, "random")
+      .mockImplementationOnce((): any => {
+        return numberFloat;
+      });
+
+    const recommendation: Recommendation[] = [
+      {
+        id: 1,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: -4, max: 10 }),
+      },
+      {
+        id: 2,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: -4, max: 10 }),
+      },
+      {
+        id: 3,
+        name: faker.lorem.words(2),
+        youtubeLink: "https://youtu.be/7DRFjThtC14",
+        score: faker.datatype.number({ min: -4, max: 10 }),
+      },
+    ];
+
+    jest
+      .spyOn(recommendationRepository, "findAll")
+      .mockImplementationOnce((): any => {
+        return recommendation;
+      });
+
+    const response = await recommendationService.getRandom();
+
+    expect(response.id).toBeDefined();
+    expect(response.name).toBeDefined();
+    expect(response.youtubeLink).toBeDefined();
+    expect(response.score).toBeDefined();
+    expect(random).toBeCalled();
   });
 });
