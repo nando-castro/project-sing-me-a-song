@@ -98,11 +98,25 @@ describe("Test upvote and downvote in POST/recommendation/upvote", () => {
 });
 
 describe("Test GET/recomendations", () => {
-  it("Should return the last 10 most voted songs", async () => {
+  it("Should return the last 10 songs", async () => {
     await recommendationFactory.insertRecommendations(11, 0);
 
     const result = await supertest(app).get(`/recommendations`);
 
     expect(result.body.length).toBe(10);
+  });
+  it("Should return top 5 most voted songs", async () => {
+    await recommendationFactory.insertRecommendations(20, 0);
+
+    const result = await supertest(app).get(`/recommendations/top/${5}`);
+
+    expect(result.body.length).toBe(5);
+  });
+  it("Should return a random recommendation", async () => {
+    await recommendationFactory.insertRecommendations(20, 10);
+
+    const result = await supertest(app).get("/recommendations/random");
+
+    expect(result.body).not.toBeNull;
   });
 });
