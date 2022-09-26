@@ -9,7 +9,7 @@
     "dev:test": "dotenv -e .env.test prisma migrate dev && dotenv -e .env.test nodemon src/server.ts",
     "test:prisma": "dotenv -e .env.test prisma migrate reset --skip-seed",
     "test:integration": "npm run test:prisma  && NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --testPathPattern=tests/integration",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --coverage --testPathPattern=tests/unit"
+    "test:unit": "NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --coverage"
   },
   "keywords": [],
   "author": "",
