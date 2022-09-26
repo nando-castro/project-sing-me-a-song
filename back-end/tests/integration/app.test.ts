@@ -119,4 +119,19 @@ describe("Test GET/recomendations", () => {
 
     expect(result.body).not.toBeNull;
   });
+  it("Should return recommendation by id", async () => {
+    const recommendation = await recommendationFactory.insertRecommendation(
+      recommendationData
+    );
+    const result = await supertest(app).get(
+      `/recommendations/${recommendation.id}`
+    );
+
+    expect(result.body).not.toBeNull();
+  });
+  it("Should return status code 404 recommendation not exists", async () => {
+    const result = await supertest(app).get(`/recommendations/${1}`);
+
+    expect(result.status).toBe(404);
+  });
 });
